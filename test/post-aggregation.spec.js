@@ -120,6 +120,31 @@ test('can squash', async t => {
   t.deepEqual(res.data[2].value.sum, 780)
 })
 
+test('can find change across entire data set for multiple values', async t => {
+  const u = await universe(data)
+
+  const q = await u.query({
+    groupBy: 'total',
+    select: {
+      $count: true,
+      $sum: 'total',
+    }
+  })
+
+  const res = await q.change(null, null, {
+    count: true,
+    sum: true
+  })
+
+  t.deepEqual(res.data, {
+    key: [90, 300],
+    value: {
+      countChange: -5,
+      sumChange: -240
+    }
+  })
+})
+
 test('can find change based on index for multiple values', async t => {
   const u = await universe(data)
 

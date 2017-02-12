@@ -66,7 +66,7 @@ module.exports = function (/* service */) {
   function change(query, parent, start, end, aggObj) {
     query.data = cloneIfLocked(parent)
     start = start || 0
-    end = end || query.data.length
+    end = end || query.data.length - 1
     var obj = {
       key: [query.data[start].key, query.data[end].key],
       value: {}
