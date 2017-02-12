@@ -49,7 +49,7 @@ module.exports = function (service) {
           // Build the valueAccessorFunction
           var accessor = aggregation.makeValueAccessor(s.value)
             // Add the reducer with the ValueAccessorFunction to the reducer
-          reducer = rAggregators.aggregators[s.key](reducer, accessor)
+          rAggregators.aggregators[s.key](reducer, accessor)
           return
         }
 
@@ -61,7 +61,7 @@ module.exports = function (service) {
         }
 
         // It's another nested object, so just repeat this process on it
-        reducer = aggregateOrNest(reducer.value(s.key), s.value)
+        aggregateOrNest(reducer.value(s.key), s.value)
       })
     }
   }

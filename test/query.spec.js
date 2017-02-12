@@ -255,30 +255,70 @@ test('can query using the dataList aggregation', async t => {
   }])
 })
 
+test('supports multiple aliases', async t => {
+  const u = await universe(data)
+
+  const q = await u.query({
+    groupBy: 'type',
+    select: {
+      mycount: {
+        $count: true
+      },
+      mytotal: {
+        $max: 'total'
+      },
+      mytip: {
+        $max: 'tip'
+      }
+    }
+  })
+
+  t.deepEqual(q.data, [{
+    key: 'cash',
+    value: {
+      mycount: {count: 2},
+      mytotal: {valueList: [100, 200], max: 200},
+      mytip: {valueList: [0, 0], max: 0}
+    }
+  }, {
+    key: 'tab',
+    value: {
+      mycount: {count: 8},
+      mytotal: {valueList: [90, 90, 90, 90, 90, 90, 190, 190], max: 190},
+      mytip: {valueList: [0, 0, 0, 0, 0, 0, 100, 100], max: 100}
+    }
+  }, {
+    key: 'visa',
+    value: {
+      mycount: {count: 2},
+      mytotal: {valueList: [200, 300], max: 300},
+      mytip: {valueList: [100, 200], max: 200}
+    }
+  }])
+})
+
 // TODO: This isn't completely possible yet, reductio will need to support aliases for all aggregations first.  As of this commit, it is only available on `count`
-// test('supports nested aliases', function(){
-//   return universe(data).then(function(u){
-//     return u.query({
-//       groupBy: 'type',
-//       select: {
-//         my: {
-//           awesome: {
-//             column: {
-//               $count: true
-//             }
+// test('supports nested aliases', async t => {
+//   const u = await universe(data)
+//
+//   const q = await u.query({
+//     groupBy: 'type',
+//     select: {
+//       my: {
+//         awesome: {
+//           column: {
+//             $count: true
 //           }
 //         }
-//       },
-//     })
+//       }
+//     }
 //   })
-//   .then(function(res){
-//     console.log(res)
-//     t.deepEqual(res.data, [
-//       {key: "cash", value: {count: 2}},
-//       {key: "tab", value: {count: 8}},
-//       {key: "visa", value: {count: 2}}
-//     ])
-//   })
+//
+//   t.deepEqual(q.data, [
+//     {key: 'cash', value: {count: 2}},
+//     {key: 'tab', value: {count: 8}},
+//     {key: 'visa', value: {count: 2}}
+//   ])
 // })
 
 test('can dispose of a query manually', async t => {
