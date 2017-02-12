@@ -106,7 +106,7 @@ function set(obj, prop, value) {
   }
   if (prop.length > 1) {
     var e = prop.shift()
-    assign(obj[e] =
+    set(obj[e] =
       Object.prototype.toString.call(obj[e]) === '[object Object]' ? obj[e] : {},
       prop,
       value)

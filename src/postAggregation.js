@@ -101,9 +101,9 @@ module.exports = function (/* service */) {
 
       _.forEach(query.data, function (record, i) {
         var previous = query.data[i - 1] || query.data[0]
-        _.set(query.data[i].value, changePath, _.get(record.value, path, defaultNull) - (previous ? _.get(previous.value, path, defaultNull) : defaultNull))
-        _.set(query.data[i].value, fromStartPath, _.get(record.value, path, defaultNull) - start)
-        _.set(query.data[i].value, fromEndPath, _.get(record.value, path, defaultNull) - end)
+        _.set(query.data[i].value, _.clone(changePath), _.get(record.value, path, defaultNull) - (previous ? _.get(previous.value, path, defaultNull) : defaultNull))
+        _.set(query.data[i].value, _.clone(fromStartPath), _.get(record.value, path, defaultNull) - start)
+        _.set(query.data[i].value, _.clone(fromEndPath), _.get(record.value, path, defaultNull) - end)
       })
     })
   }

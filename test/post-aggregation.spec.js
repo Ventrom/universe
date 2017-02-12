@@ -224,3 +224,107 @@ test('can create a changeMap', async t => {
     }
   ])
 })
+
+test('can create a changeMap on multiple aliases', async t => {
+  const u = await universe(data)
+
+  const q = await u.query({
+    groupBy: 'total',
+    select: {
+      mycount: {
+        $count: true
+      },
+      mysum: {
+        $sum: 'total'
+      }
+    }
+  })
+
+  const res = await q.changeMap({
+    mycount: {count: true},
+    mysum: {sum: true},
+  })
+
+  t.deepEqual(res.data, [
+    {key: 90,
+      value: {
+        mycount: {
+          count: 6,
+          countChange: 0,
+          countChangeFromStart: 0,
+          countChangeFromEnd: 5
+        },
+        mysum: {
+          sum: 540,
+          sumChange: 0,
+          sumChangeFromStart: 0,
+          sumChangeFromEnd: 240
+        }
+      }
+    },
+    {key: 100,
+      value: {
+        mycount: {
+          count: 1,
+          countChange: -5,
+          countChangeFromStart: -5,
+          countChangeFromEnd: 0
+        },
+        mysum: {
+          sum: 100,
+          sumChange: -440,
+          sumChangeFromStart: -440,
+          sumChangeFromEnd: -200
+        }
+      }
+    },
+    {key: 190,
+      value: {
+        mycount: {
+          count: 2,
+          countChange: 1,
+          countChangeFromStart: -4,
+          countChangeFromEnd: 1
+        },
+        mysum: {
+          sum: 380,
+          sumChange: 280,
+          sumChangeFromStart: -160,
+          sumChangeFromEnd: 80
+        }
+      }
+    },
+    {key: 200,
+      value: {
+        mycount: {
+          count: 2,
+          countChange: 0,
+          countChangeFromStart: -4,
+          countChangeFromEnd: 1
+        },
+        mysum: {
+          sum: 400,
+          sumChange: 20,
+          sumChangeFromStart: -140,
+          sumChangeFromEnd: 100
+        }
+      }
+    },
+    {key: 300,
+      value: {
+        mycount: {
+          count: 1,
+          countChange: -1,
+          countChangeFromStart: -5,
+          countChangeFromEnd: 0
+        },
+        mysum: {
+          sum: 300,
+          sumChange: -100,
+          sumChangeFromStart: -240,
+          sumChangeFromEnd: 0
+        }
+      }
+    }
+  ])
+})
