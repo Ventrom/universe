@@ -1,7 +1,7 @@
 'use strict'
 
 var Promise = require('q')
-var crossfilter = require('crossfilter2')
+var crossfilter = require('crossfilter2').default
 
 var _ = require('./lodash')
 
